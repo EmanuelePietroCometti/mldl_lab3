@@ -16,7 +16,8 @@ def main():
     
     prepare_tiny_imagenet()
     train_loader, val_loader = get_tiny_imagenet_loaders()
-    model = CustomNet().cuda()
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model = CustomNet().to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 

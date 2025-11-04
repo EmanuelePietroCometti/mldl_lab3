@@ -5,10 +5,10 @@ import os
 def validate(model, val_loader, criterion):
     model.eval()
     val_loss, correct, total = 0, 0, 0
-
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     with torch.no_grad():
         for inputs, targets in val_loader:
-            inputs, targets = inputs.cuda(), targets.cuda()
+            inputs, targets = inputs.to(device), targets.to(device)
             outputs = model(inputs)
             loss = criterion(outputs, targets)
             val_loss += loss.item()
@@ -23,11 +23,12 @@ def validate(model, val_loader, criterion):
 
 def train(epoch, model, train_loader, criterion, optimizer):
     model.train()
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     running_loss, correct, total = 0, 0, 0
     checkpoint_dir = 'checkpoints'
     os.makedirs(checkpoint_dir, exist_ok=True)
     for inputs, targets in train_loader:
-        inputs, targets = inputs.cuda(), targets.cuda()
+        inputs, targets = inputs.to(device), targets.to(device)
 
         optimizer.zero_grad()
         outputs = model(inputs)
